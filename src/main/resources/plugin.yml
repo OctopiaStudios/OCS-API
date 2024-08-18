@@ -1,0 +1,8 @@
+name: OCS-API
+version: 1.0.1
+main: fr.octopiastudios.api.OSAPI
+author: HaiZen
+description: GlobalAPI-based API from Octopia Studios for Minecraft plugin creation (1.8 - 1.21)
+softdepend: [ Citizens, Vault ]
+api-version: 1.13
+load: STARTUP

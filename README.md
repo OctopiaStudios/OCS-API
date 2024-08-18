@@ -1,2 +1,1 @@
-# OCS-API
-Octopia Studios API for plugin creation
+# Octopia Studios API for plugin creation

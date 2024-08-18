@@ -1,0 +1,70 @@
+plugins {
+    id 'java'
+    id 'io.github.goooler.shadow' version '8.1.7'
+}
+
+group = 'fr.octopiastudios'
+version = '1.0.1'
+java.sourceCompatibility = JavaVersion.VERSION_1_8
+
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
+
+repositories {
+    mavenCentral()
+    maven { url 'https://jitpack.io' }
+
+    // Spigot API
+    maven { url 'https://repo.papermc.io/repository/maven-public/' }
+
+    // Citizens API
+    maven { url 'https://maven.citizensnpcs.co/repo' }
+
+    // PlaceholderAPI
+    maven { url 'https://repo.extendedclip.com/content/repositories/placeholderapi/' }
+
+    // NBT API (https://github.com/tr7zw/Item-NBT-API/wiki/Using-Gradle)
+    maven { name 'CodeMC'; url 'https://repo.codemc.io/repository/maven-public/' }
+
+    // Include the local libs folder
+    flatDir { dirs 'libs' }
+}
+
+dependencies {
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+
+    // Spigot API
+    compileOnly 'org.spigotmc:spigot-api:1.21-R0.1-SNAPSHOT'
+
+     // Integration of NMSLib, thanks Mantic (https://github.com/Mantic-Development/NMSLib), imported from the jar because not available on Maven
+    implementation files('libs/NMSLib_Plugin.jar')
+
+    // Plugins implementations (soft depends)
+    compileOnly 'net.citizensnpcs:citizensapi:2.0.35-SNAPSHOT'
+    compileOnly 'com.github.MilkBowl:VaultAPI:1.7'
+    compileOnly 'me.clip:placeholderapi:2.11.2'
+
+    // Utilities
+    implementation 'com.zaxxer:HikariCP:4.0.3'
+    implementation 'de.tr7zw:item-nbt-api:2.13.1'
+    implementation 'joda-time:joda-time:2.12.7'
+
+    // Annotations
+    compileOnly 'org.jetbrains:annotations:20.1.0'
+    annotationProcessor 'org.jetbrains:annotations:20.1.0'
+    compileOnly 'org.projectlombok:lombok:1.18.32'
+    annotationProcessor 'org.projectlombok:lombok:1.18.32'
+}
+
+shadowJar {
+    relocate 'me.fullpage.nmslib', 'fr.octopiastudios.api.nmslib'
+    relocate 'de.tr7zw.annotations', 'fr.octopiastudios.api.nbtapi.annotations'
+    relocate 'de.tr7zw.changeme.nbtapi', 'fr.octopiastudios.api.nbtapi'
+    configurations = [project.configurations.runtimeClasspath]
+}
+
+build {
+    dependsOn shadowJar
+}
