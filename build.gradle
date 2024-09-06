@@ -77,3 +77,12 @@ shadowJar {
 build {
     dependsOn shadowJar
 }
+
+task copyShadowJar(type: Copy) {
+    from("$buildDir/libs")
+    include("*.jar")
+    into("$rootDir")
+}
+
+build.finalizedBy(copyShadowJar)
+

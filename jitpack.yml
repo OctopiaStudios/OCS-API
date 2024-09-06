@@ -6,6 +6,7 @@ before_install:
 install:
   - ./gradlew shadowJar
 script:
-  - cp build/libs/*-all.jar .
   - ls -la build/libs
+  - ls -la
+  - cp build/libs/*.jar .
   - ls -la
