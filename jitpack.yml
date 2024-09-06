@@ -5,3 +5,5 @@ before_install:
   - bash ensure-java-21 install
 install:
   - ./gradlew shadowJar
+script:
+  - cp build/libs/*-all.jar .
