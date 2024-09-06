@@ -1,5 +1,5 @@
 name: OCS-API
-version: 1.0.1
+version: 1.0.0
 main: fr.octopiastudios.api.OSAPI
 author: HaiZen
 description: GlobalAPI-based API from Octopia Studios for Minecraft plugin creation (1.8 - 1.21)
