@@ -14,8 +14,11 @@ tasks.withType(JavaCompile) {
 
 publishing {
     publications {
-        mavenJava(MavenPublication) {
-            artifact tasks.shadowJar.archiveFile
+        maven(MavenPublication) {
+            groupId project.group
+            artifactId project.name
+            version project.version
+            from components.java
         }
     }
 }
@@ -67,6 +70,8 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok:1.18.32'
 }
 
+tasks.build.dependsOn tasks.shadowJar
+
 shadowJar {
     relocate 'me.fullpage.nmslib', 'fr.octopiastudios.api.nmslib'
     relocate 'de.tr7zw.annotations', 'fr.octopiastudios.api.nbtapi.annotations'
@@ -74,15 +79,7 @@ shadowJar {
     configurations = [project.configurations.runtimeClasspath]
 }
 
-build {
-    dependsOn shadowJar
+artifacts {
+    archives shadowJar
 }
-
-task copyShadowJar(type: Copy) {
-    from("$buildDir/libs")
-    include("*.jar")
-    into("$rootDir")
-}
-
-build.finalizedBy(copyShadowJar)
 
