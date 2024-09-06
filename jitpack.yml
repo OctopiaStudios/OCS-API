@@ -3,3 +3,5 @@ jdk:
 before_install:
   - echo "Before Install"
   - bash ensure-java-21 install
+install:
+  - ./gradlew shadowJar
