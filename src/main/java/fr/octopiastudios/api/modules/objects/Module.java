@@ -1,11 +1,13 @@
 package fr.octopiastudios.api.modules.objects;
 
+import com.google.common.collect.Lists;
 import fr.octopiastudios.api.OSAPI;
 import fr.octopiastudios.api.OSPlugin;
 import fr.octopiastudios.api.citizens.CitizenManager;
 import fr.octopiastudios.api.citizens.objects.Citizen;
 import fr.octopiastudios.api.commands.CommandFramework;
 import fr.octopiastudios.api.commands.ICommand;
+import fr.octopiastudios.api.tasks.executorservice.OSExecutorService;
 import fr.octopiastudios.api.utils.utilities.Utils;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,6 +16,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.event.Listener;
 
 import java.io.File;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Getter
 @Setter
@@ -23,6 +27,7 @@ public abstract class Module {
 
     private boolean active, desactivable;
     private String moduleName, dependencyRequiredClass;
+    private List<OSExecutorService> executorServices;
 
     public Module(OSPlugin plugin, String moduleName, String dependencyRequiredClass) {
         this.plugin = plugin;
@@ -30,6 +35,7 @@ public abstract class Module {
         this.desactivable = true;
         this.moduleName = moduleName;
         this.dependencyRequiredClass = dependencyRequiredClass;
+        this.executorServices = Lists.newArrayList();
 
         if (this.dependencyRequiredClass != null && !Utils.isClassLoaded(this.dependencyRequiredClass)) {
             this.setActive(false);
@@ -48,6 +54,7 @@ public abstract class Module {
 
     public void onUnload() {
         if (!this.isActive()) return;
+        this.shutdownAllExecutorServices();
         this.getPlugin().getLogger().info("The module " + this.moduleName + " was successfully unloaded.");
     }
 
@@ -79,6 +86,16 @@ public abstract class Module {
         }
     }
 
+    public void registerExecutorService(OSExecutorService executorService) {
+        if (!this.isActive()) return;
+        this.executorServices.add(executorService);
+    }
+
+    public void registerExecutorServices(List<OSExecutorService> executorServices) {
+        if (!this.isActive()) return;
+        this.executorServices.addAll(executorServices);
+    }
+
     public File getModuleFolder() {
         File folder = new File(this.getPlugin().getDataFolder() + File.separator + this.getClass().getSimpleName());
         if (!folder.exists()) folder.mkdir();
@@ -91,5 +108,24 @@ public abstract class Module {
             return false;
         }
         return true;
+    }
+
+    public void shutdownAllExecutorServices() {
+        if (this.executorServices.isEmpty()) return;
+        this.executorServices.forEach(this::shutdownExecutorService);
+    }
+
+    private void shutdownExecutorService(OSExecutorService executorService) {
+        executorService.getExecutorService().shutdown();
+        try {
+            if (!executorService.getExecutorService().awaitTermination(60, TimeUnit.SECONDS)) {
+                executorService.getExecutorService().shutdownNow();
+            }
+            this.getPlugin().getLogger().info("[" + this.moduleName.toUpperCase() + "] ExecutorService '" + executorService.getName() + "' has been shutdown.");
+        } catch (InterruptedException e) {
+            executorService.getExecutorService().shutdownNow();
+            this.getPlugin().getLogger().info("[" + this.moduleName.toUpperCase() + "] ExecutorService '" + executorService.getName() + "' has been interrupted.");
+            Thread.currentThread().interrupt();
+        }
     }
 }

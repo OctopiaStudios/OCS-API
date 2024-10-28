@@ -1,8 +1,12 @@
 package fr.octopiastudios.api.utils.utilities;
 
 import com.google.common.collect.Lists;
+import fr.octopiastudios.api.OSAPI;
 import fr.octopiastudios.api.OSPlugin;
 import fr.octopiastudios.api.cooldowns.CooldownUtils;
+import fr.octopiastudios.api.modules.objects.Module;
+import fr.octopiastudios.api.tasks.TickUtils;
+import fr.octopiastudios.api.tasks.executorservice.OSExecutorService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DurationFormatUtils;
 import org.bukkit.Bukkit;
@@ -40,6 +44,28 @@ public class Utils {
 
     public static String toStringOnOff(boolean value) {
         return value ? ("§aON") : ("§cOFF");
+    }
+
+    /**
+     * Create [OSExecutorService] with right name (MODULE_NAME-COUNT)
+     */
+    public static OSExecutorService createExecutorService(Module module, int poolSize) {
+        String moduleName = module.getModuleName().toUpperCase() + "-" + (module.getExecutorServices().size() + 1);
+        return new OSExecutorService(moduleName, poolSize);
+    }
+
+    /**
+     * Log [OSExecutorService] later (in seconds)
+     */
+    public static void logExecutorServiceLater(OSExecutorService executorService, int seconds) {
+        Bukkit.getScheduler().runTaskLater(OSAPI.getAPI(), executorService::logExecutorService, TickUtils.fromSecond(seconds));
+    }
+
+    public static String getTitleWithoutColor(String title) {
+        int titleLength = title.length();
+        int remaining = 52 - titleLength;
+        String line = StringUtils.repeat("-", remaining);
+        return "-" + title + line;
     }
 
     public static Player[] getOnlinePlayers() {

@@ -13,6 +13,10 @@ public class APIConfig extends BukkitYamlConfiguration {
     @Comment("Auto update OCS-API if a new version is available (recommended)")
     public boolean autoUpdate = true;
 
+    @Comment({"", "Debugs"})
+    public boolean activeDatabaseDebug = false;
+    public boolean activeThreadDebug = false;
+
     @Comment({"", "Messages"})
     public String commandNotFound = "&cThis command does not exist.";
     public String noPermissionCommand = "&cYou do not have permission to use this command.";

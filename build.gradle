@@ -50,7 +50,7 @@ dependencies {
     // Spigot API
     compileOnly 'org.spigotmc:spigot-api:1.21-R0.1-SNAPSHOT'
 
-     // Integration of NMSLib, thanks Mantic (https://github.com/Mantic-Development/NMSLib), imported from the jar because not available on Maven
+    // Integration of NMSLib, thanks Mantic (https://github.com/Mantic-Development/NMSLib), imported from the jar because not available on Maven
     implementation files('libs/NMSLib_Plugin.jar')
 
     // Plugins implementations (soft depends)
