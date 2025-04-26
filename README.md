@@ -3,6 +3,8 @@
 # OCS-API - Octopia Studios API
 
 Library for Octopia Studios plugins. Initially based on GlobalAPI, heavily edited for our needs.
+The Fabric version of OCS-API is in the research and development phase. We do not recommend using it at this time.
+Thanks to @Diodu for the initiative and support of the project.
 
 Repository:
 ```xml 
