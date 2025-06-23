@@ -50,13 +50,13 @@ dependencies {
     // Spigot API
     compileOnly 'org.spigotmc:spigot-api:1.21-R0.1-SNAPSHOT'
 
-     // Integration of NMSLib, thanks Mantic (https://github.com/Mantic-Development/NMSLib), imported from the jar because not available on Maven
+    // Integration of NMSLib, thanks Mantic (https://github.com/Mantic-Development/NMSLib), imported from the jar because not available on Maven
     implementation files('libs/NMSLib_Plugin.jar')
 
     // Plugins implementations (soft depends)
     compileOnly 'net.citizensnpcs:citizensapi:2.0.35-SNAPSHOT'
     compileOnly 'com.github.MilkBowl:VaultAPI:1.7'
-    compileOnly 'me.clip:placeholderapi:2.11.2'
+    compileOnly 'me.clip:placeholderapi:2.11.6'
 
     // Utilities
     implementation 'com.zaxxer:HikariCP:4.0.3'
