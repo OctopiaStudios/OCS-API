@@ -1,14 +1,26 @@
 plugins {
     id 'java'
     id 'io.github.goooler.shadow' version '8.1.7'
+    id 'maven-publish'
 }
 
 group = 'fr.octopiastudios'
-version = '1.0.1'
+version = '1.0.0'
 java.sourceCompatibility = JavaVersion.VERSION_1_8
 
 tasks.withType(JavaCompile) {
     options.encoding = "UTF-8"
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId project.group
+            artifactId project.name
+            version project.version
+            from components.java
+        }
+    }
 }
 
 repositories {
@@ -58,6 +70,8 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok:1.18.32'
 }
 
+tasks.build.dependsOn tasks.shadowJar
+
 shadowJar {
     relocate 'me.fullpage.nmslib', 'fr.octopiastudios.api.nmslib'
     relocate 'de.tr7zw.annotations', 'fr.octopiastudios.api.nbtapi.annotations'
@@ -65,6 +79,7 @@ shadowJar {
     configurations = [project.configurations.runtimeClasspath]
 }
 
-build {
-    dependsOn shadowJar
+artifacts {
+    archives shadowJar
 }
+
